@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
-import { LinkContainer } from 'react-router-bootstrap'
 import { Table, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProductsLS, deleteProduct } from '../actions/productActions'
+import { listProductsLS, deleteProduct, createProduct } from '../actions/productActions'
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
-const ProductListScreen = () => {
+const ProductListScreen = ({ history }) => {
     const dispatch = useDispatch()
 
     const productLSList = useSelector((state) => state.productLSList)
@@ -18,9 +18,23 @@ const ProductListScreen = () => {
         error: errorDelete,
     } = productDelete
 
+    const productCreate = useSelector((state) => state.productCreate)
+    const {
+        loading: loadingCreate,
+        error: errorCreate,
+        success: successCreate,
+        product: createdProduct
+    } = productCreate
+
     useEffect(() => {
-        dispatch(listProductsLS())
-    }, [dispatch])
+        dispatch({ type: PRODUCT_CREATE_RESET })
+
+        if (successCreate) {
+            history.push(`produto/${createdProduct._id}/editar`)
+        } else {
+            dispatch(listProductsLS())
+        }
+    }, [dispatch, history, successCreate, createdProduct])
 
     const deleteHandler = (id) => {
         if (window.confirm('Deseja confirmar?')) {
@@ -29,8 +43,8 @@ const ProductListScreen = () => {
         }
     }
 
-    const createProductHandler = (product) => {
-        //   CREATE PRODUCT
+    const createProductHandler = () => {
+        dispatch(createProduct())
     }
 
     return (
@@ -47,6 +61,8 @@ const ProductListScreen = () => {
             </Row>
             {loadingDelete && <Loader />}
             {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
+            {loadingCreate && <Loader />}
+            {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
             {loading ? (
                 <Loader />
             ) : error ? (
@@ -72,11 +88,6 @@ const ProductListScreen = () => {
                                 <td>{product.category}</td>
                                 <td>{product.brand}</td>
                                 <td>
-                                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                                        <Button variant='light' className='btn-sm'>
-                                            <i className='fas fa-edit'></i>
-                                        </Button>
-                                    </LinkContainer>
                                     <Button
                                         variant='danger'
                                         className='btn-sm'
