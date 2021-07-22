@@ -7,7 +7,7 @@ const Footer = () => {
             <Container>
                 <Row>
                     <Col className='text-center py-3'>
-                        Desafio #2 Gama Academy - VTEX LION-X Copyright &copy; LUCIANO PASTINE
+                        Desafio #2 Gama Academy - VTEX BUSINESS-COMM Copyright &copy; LUCIANO PASTINE
                     </Col>
                 </Row>
             </Container>

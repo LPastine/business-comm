@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listProductsLS, deleteProduct, createProduct } from '../actions/productActions'
-import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
+// import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
 const ProductListScreen = ({ history }) => {
     const dispatch = useDispatch()
@@ -27,7 +27,7 @@ const ProductListScreen = ({ history }) => {
     } = productCreate
 
     useEffect(() => {
-        dispatch({ type: PRODUCT_CREATE_RESET })
+        // dispatch({ type: PRODUCT_CREATE_RESET })
 
         if (successCreate) {
             history.push(`produto/${createdProduct._id}/editar`)
@@ -45,6 +45,7 @@ const ProductListScreen = ({ history }) => {
 
     const createProductHandler = () => {
         dispatch(createProduct())
+        dispatch(listProductsLS())
     }
 
     return (

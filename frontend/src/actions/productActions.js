@@ -7,6 +7,9 @@ import {
     PRODUCT_LS_LIST_REQUEST,
     PRODUCT_LS_LIST_SUCCESS,
     PRODUCT_LS_LIST_FAIL,
+    PRODUCT_DETAILS_REQUEST,
+    PRODUCT_DETAILS_SUCCESS,
+    PRODUCT_DETAILS_FAIL,
     PRODUCT_DELETE_REQUEST,
     PRODUCT_DELETE_SUCCESS,
     PRODUCT_DELETE_FAIL,
@@ -49,6 +52,36 @@ export const listProductsLS = () => async (dispatch) => {
         })
     }
 }
+
+export const listProductDetails = (id) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: PRODUCT_DETAILS_REQUEST })
+
+      const { productLSList: { products } } = getState()
+  
+      const productDetails = []
+
+      for (let index = 0; index < products.length; index++) {
+        const product = products[index];
+        if (product._id === id.toString()) {
+            productDetails.push(product)
+        }
+    }
+  
+      dispatch({
+        type: PRODUCT_DETAILS_SUCCESS,
+        payload: productDetails,
+      })
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_DETAILS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }
 
 export const deleteProduct = (id) => async (dispatch, getState) => {
     try {
@@ -106,21 +139,17 @@ export const createProduct = () => async (dispatch, getState) => {
             numReviews: 0,
         }
 
-        console.log(newProduct);
-
-        //  REMOVE FROM STATE
-        // const { productList: { products } } = getState()
-        // let newProductList = []
-        // for (let index = 0; index < products.length; index++) {
-        //     const product = products[index];
-        //     if (product._id !== id.toString()) {
-        //         newProductList.push(product)
-        //     }
-        // }
-
+        //  ADD TO STATE
+        let newProductList = []
+        for (let index = 0; index < products.length; index++) {
+            const product = products[index];
+            newProductList.push(product)
+            }
+        newProductList.push(newProduct)
         // UPDATE LS
-        // localStorage.clear()
-        // localStorage.setItem('localProducts', JSON.stringify(newProductList))
+
+        localStorage.clear()
+        localStorage.setItem('localProducts', JSON.stringify(newProductList))
 
         dispatch({
             type: PRODUCT_CREATE_SUCCESS,

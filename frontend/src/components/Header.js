@@ -8,13 +8,13 @@ const Header = () => {
             <Navbar bg="dark" variant='dark' expand="lg" collapseOnSelect>
                 <Container>
                     <LinkContainer to='/'>
-                        <Navbar.Brand>LION-X</Navbar.Brand>
+                        <Navbar.Brand>BUSINESS-COMM</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <LinkContainer to='/clientes'>
-                                <Nav.Link><i className="fas fa-users"></i> Clientes</Nav.Link>
+                            <LinkContainer to='/usuarios'>
+                                <Nav.Link><i className="fas fa-users"></i> Usuarios</Nav.Link>
                             </LinkContainer>
                             <LinkContainer to='/produtos'>
                                 <Nav.Link ><i className="fas fa-box-open"></i> Produtos</Nav.Link>
