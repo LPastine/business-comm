@@ -137,22 +137,21 @@ export const createProduct = () => async (dispatch, getState) => {
             rating: 0,
             numReviews: 0,
         }
+        
+        let updatedList = products
+        updatedList.push(newProduct)
 
-        //  ADD TO STATE
-        let newProductList = []
-        for (let index = 0; index < products.length; index++) {
-            const product = products[index];
-            newProductList.push(product)
-            }
-        newProductList.push(newProduct)
-        // UPDATE LS
-
-        localStorage.clear()
-        localStorage.setItem('localProducts', JSON.stringify(newProductList))
+        console.log(updatedList);
+        localStorage.setItem('localProducts', JSON.stringify(updatedList))
 
         dispatch({
             type: PRODUCT_CREATE_SUCCESS,
             payload: newProduct
+        })
+
+        dispatch({
+            type: PRODUCT_LS_LIST_SUCCESS,
+            payload: updatedList
         })
     } catch (error) {
         dispatch({

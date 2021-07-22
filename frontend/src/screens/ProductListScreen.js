@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listProductsLS, deleteProduct, createProduct } from '../actions/productActions'
+import { LinkContainer } from 'react-router-bootstrap'
 // import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
 const ProductListScreen = ({ history }) => {
@@ -89,6 +90,11 @@ const ProductListScreen = ({ history }) => {
                                 <td>{product.category}</td>
                                 <td>{product.brand}</td>
                                 <td>
+                                    <LinkContainer to={`/editar/produto/${product._id}`}>
+                                        <Button variant='light' className='btn-sm'>
+                                            <i className='fas fa-edit'></i>
+                                        </Button>
+                                    </LinkContainer>
                                     <Button
                                         variant='danger'
                                         className='btn-sm'
