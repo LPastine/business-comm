@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
-import { getUserDetails } from '../actions/userActions'
+import { getUserDetails, updateUser } from '../actions/userActions'
+import { USER_UPDATE_RESET } from '../constants/userConstants'
 
 
-const UserEditScreen = ({ match }) => {
+const UserEditScreen = ({ history, match }) => {
     const userId = match.params.id
     
     const [name, setName] = useState('')
@@ -18,14 +19,23 @@ const UserEditScreen = ({ match }) => {
     const dispatch = useDispatch()
 
     const userDetails = useSelector((state) => state.userDetails)
-    const { loading, error, user } = userDetails
+    const { loading, error} = userDetails
+
+    const userUpdate = useSelector((state) => state.userUpdate)
+    const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdate 
 
     useEffect (() => {
-        dispatch(getUserDetails(userId))
-    }, [userId, dispatch])
+        if(successUpdate) {
+            dispatch({ type: USER_UPDATE_RESET })
+            history.push('/usuarios')
+        } else {
+            dispatch(getUserDetails(userId))
+        }
+    }, [userId, dispatch, successUpdate, history ])
 
     const submitHandler = (e) => {
         e.preventDefault()
+        dispatch(updateUser({ _id: userId, name, email, isAdmin }))
     }
 
     return (
@@ -35,8 +45,10 @@ const UserEditScreen = ({ match }) => {
             </Link>
             <FormContainer>
             <h1>Editar Usário</h1>
+            {loadingUpdate && <Loader />}
+            {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
-                <Form>
+                <Form onSubmit={submitHandler}>
                     <Form.Group controlId='name' className='py-3'>
                         <Form.Label>Nome</Form.Label>
                         <Form.Control

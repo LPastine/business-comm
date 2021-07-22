@@ -13,6 +13,9 @@ import {
     USER_DETAILS_FAIL,
     USER_DETAILS_REQUEST,
     USER_DETAILS_SUCCESS,
+    USER_UPDATE_REQUEST,
+    USER_UPDATE_SUCCESS,
+    USER_UPDATE_FAIL,
 } from '../constants/userConstants'
 
 export const listUsers = () => async (dispatch) => {
@@ -77,6 +80,40 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         dispatch({
             type: USER_DELETE_FAIL,
             payload: error.message,
+        })
+    }
+}
+
+export const updateUser = (updatedUser) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_UPDATE_REQUEST,
+        })
+
+        const { userLSList: { users } } = getState()
+        let updatedList = []
+        for (let index = 0; index < users.length; index++) {
+            const user = users[index];
+            if (user._id === updatedUser._id.toString()) {
+                updatedList.push(updatedUser)
+            } else {
+                updatedList.push(user)
+            }
+        }
+        localStorage.setItem('localUsers', JSON.stringify(updatedList))
+
+        dispatch({
+            type: USER_UPDATE_SUCCESS,
+        })
+
+        dispatch({
+            type: USER_LS_LIST_SUCCESS,
+            payload: updatedList
+        })
+    } catch (error) {
+        dispatch({
+            type: USER_UPDATE_FAIL,
+        payload: error.message,
         })
     }
 }
