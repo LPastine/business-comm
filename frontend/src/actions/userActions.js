@@ -9,7 +9,10 @@ import {
     USER_LS_LIST_FAIL,
     USER_DELETE_REQUEST,
     USER_DELETE_SUCCESS,
-    USER_DELETE_FAIL
+    USER_DELETE_FAIL,
+    USER_DETAILS_FAIL,
+    USER_DETAILS_REQUEST,
+    USER_DETAILS_SUCCESS,
 } from '../constants/userConstants'
 
 export const listUsers = () => async (dispatch) => {
@@ -77,3 +80,30 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         })
     }
 }
+
+export const getUserDetails = (id) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_DETAILS_REQUEST,
+      })
+      
+      const { userList: { users } } = getState()
+        let userDetails = []
+        for (let index = 0; index < users.length; index++) {
+            const user = users[index];
+            if (user._id === id.toString()) {
+                userDetails.push(user)
+            }
+        }
+  
+      dispatch({
+        type: USER_DETAILS_SUCCESS,
+        payload: userDetails,
+      })
+    } catch (error) {
+        dispatch({
+            type: USER_DETAILS_FAIL,
+        payload: error.message,
+        })
+    }
+  }
