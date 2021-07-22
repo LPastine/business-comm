@@ -5,86 +5,115 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
-import { getUserDetails, updateUser } from '../actions/userActions'
-import { USER_UPDATE_RESET } from '../constants/userConstants'
+// import { listProductDetails } from '../actions/productActions'
 
+const ProductEditScreen = ({ match, history }) => {
+  const productId = match.params.id
 
-const UserEditScreen = ({ history, match }) => {
-    const userId = match.params.id
-    
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [isAdmin, setIsAdmin] = useState(false)
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState(0)
+  const [image, setImage] = useState('')
+  const [brand, setBrand] = useState('')
+  const [category, setCategory] = useState('')
+  const [countInStock, setCountInStock] = useState(0)
+  const [description, setDescription] = useState('')
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    const userDetails = useSelector((state) => state.userDetails)
-    const { loading, error} = userDetails
+  useEffect(() => {
+      
+  }, [])
 
-    const userUpdate = useSelector((state) => state.userUpdate)
-    const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdate 
+  const submitHandler = (e) => {
+    e.preventDefault()
+    // UPDATE PRODUCT
+  }
 
-    useEffect (() => {
-        if(successUpdate) {
-            dispatch({ type: USER_UPDATE_RESET })
-            history.push('/usuarios')
-        } else {
-            dispatch(getUserDetails(userId))
-        }
-    }, [userId, dispatch, successUpdate, history ])
+  return (
+    <>
+      <Link to='/produtos' className='btn btn-light my-3'>
+        Voltar
+      </Link>
+      <FormContainer>
+        <h1>Editar Produto</h1>
+          <Form onSubmit={submitHandler}>
+            <Form.Group controlId='name' className='py-3'>
+              <Form.Label>Nome</Form.Label>
+              <Form.Control
+                type='name'
+                placeholder='Nome do produto'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
 
-    const submitHandler = (e) => {
-        e.preventDefault()
-        dispatch(updateUser({ _id: userId, name, email, isAdmin }))
-    }
+            <Form.Group controlId='price' className='py-3'>
+              <Form.Label>Preço</Form.Label>
+              <Form.Control
+                type='number'
+                placeholder='Inserir preço'
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
 
-    return (
-        <>
-            <Link to='/produtos' className='btn btn-light my-3'>
-            Voltar
-            </Link>
-            <FormContainer>
-            <h1>Editar Produto</h1>
-            {loadingUpdate && <Loader />}
-            {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
-            {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
-                <Form onSubmit={submitHandler}>
-                    <Form.Group controlId='name' className='py-3'>
-                        <Form.Label>Nome</Form.Label>
-                        <Form.Control
-                        type='name'
-                        placeholder='Nome'
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+            <Form.Group controlId='image' className='py-3'>
+              <Form.Label>Foto</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Inserir url da foto do produto'
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
 
-                    <Form.Group controlId='email' className='py-3'>
-                        <Form.Label>Endereço de E-mail</Form.Label>
-                        <Form.Control
-                        type='email'
-                        placeholder='E-Mail'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        ></Form.Control>
-                    </Form.Group>
+            <Form.Group controlId='brand' className='py-3'>
+              <Form.Label>Marca</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Inserir marca'
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
 
-                    <Form.Group controlId='isAdmin' className='py-3'>
-                        <Form.Check
-                        type='checkbox'
-                        label='Administrador?'
-                        checked={isAdmin}
-                        onChange={(e) => setIsAdmin(e.target.checked)}
-                        ></Form.Check>
-                    </Form.Group>
-                    <Button type='submit' variant='primary' className='py-3'>
-                        Editar
-                    </Button>
-                </Form>
-            )}
-            </FormContainer>
-        </>
-    )
+            <Form.Group controlId='countInStock' className='py-3'>
+              <Form.Label>Estoque</Form.Label>
+              <Form.Control
+                type='number'
+                placeholder='Quantidade de Estoque'
+                value={countInStock}
+                onChange={(e) => setCountInStock(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId='category' className='py-3'>
+              <Form.Label>Categoria</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Inserir categoria'
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId='description' className='py-3'>
+              <Form.Label>Descrição</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Inserir descrição'
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Button type='submit' variant='primary' className='py-3'>
+              Editar
+            </Button>
+          </Form>
+      </FormContainer>
+    </>
+  )
 }
 
-export default UserEditScreen
+export default ProductEditScreen

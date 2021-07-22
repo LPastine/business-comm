@@ -15,7 +15,8 @@ import {
     PRODUCT_DELETE_FAIL,
     PRODUCT_CREATE_REQUEST,
     PRODUCT_CREATE_SUCCESS,
-    PRODUCT_CREATE_FAIL
+    PRODUCT_CREATE_FAIL,
+    PRODUCT_CREATE_RESET
 } from '../constants/productConstants'
 
 export const listProducts = () => async (dispatch) => {
@@ -153,6 +154,7 @@ export const createProduct = () => async (dispatch, getState) => {
             type: PRODUCT_LS_LIST_SUCCESS,
             payload: updatedList
         })
+
     } catch (error) {
         dispatch({
             type: PRODUCT_CREATE_FAIL,
