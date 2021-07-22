@@ -6,7 +6,10 @@ import {
     USER_LIST_FAIL,
     USER_LS_LIST_REQUEST,
     USER_LS_LIST_SUCCESS,
-    USER_LS_LIST_FAIL
+    USER_LS_LIST_FAIL,
+    USER_DELETE_REQUEST,
+    USER_DELETE_SUCCESS,
+    USER_DELETE_FAIL
 } from '../constants/userConstants'
 
 export const listUsers = () => async (dispatch) => {
@@ -40,6 +43,37 @@ export const listUsersLS = () => async (dispatch) => {
         dispatch({
             type: USER_LS_LIST_FAIL,
             payload: error.message
+        })
+    }
+}
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_DELETE_REQUEST,
+        })
+
+        //  REMOVE FROM STATE
+        const { userList: { users } } = getState()
+        let newUserList = []
+        for (let index = 0; index < users.length; index++) {
+            const user = users[index];
+            if (user._id !== id.toString()) {
+                newUserList.push(user)
+            }
+        }
+
+        // UPDATE LS
+        localStorage.setItem('localUsers', JSON.stringify(newUserList))
+
+
+        dispatch({
+            type: USER_DELETE_SUCCESS,
+        })
+    } catch (error) {
+        dispatch({
+            type: USER_DELETE_FAIL,
+            payload: error.message,
         })
     }
 }

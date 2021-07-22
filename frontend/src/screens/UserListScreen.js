@@ -4,7 +4,7 @@ import { Table, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listUsersLS } from '../actions/userActions'
+import { listUsersLS, deleteUser } from '../actions/userActions'
 
 const UserListScreen = () => {
   const dispatch = useDispatch()
@@ -12,13 +12,17 @@ const UserListScreen = () => {
   const userLSList = useSelector((state) => state.userLSList)
   const { loading, error, users } = userLSList
 
+  const userDelete = useSelector((state) => state.userDelete)
+  const { success: successDelete } = userDelete
+
   useEffect(() => {
     dispatch(listUsersLS())
-  }, [dispatch])
+  }, [dispatch, successDelete])
 
   const deleteHandler = (id) => {
-    console.log('delete')
-  }
+    if (window.confirm('Deseja confirmar?')) {
+      dispatch(deleteUser(id))
+  }}
 
   const createUserHandler = () => {
       console.log('create user');

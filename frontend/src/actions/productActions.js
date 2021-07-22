@@ -100,7 +100,6 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
         }
 
         // UPDATE LS
-        localStorage.clear()
         localStorage.setItem('localProducts', JSON.stringify(newProductList))
 
 
