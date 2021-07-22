@@ -11,12 +11,14 @@ const users = [
     name: 'John Doe',
     email: 'john@example.com',
     password: '123456',
+    isAdmin: false,
   },
   {
     _id: '3',
     name: 'Jane Doe',
     email: 'jane@example.com',
     password: '123456',
+    isAdmin: false,
   },
 ]
 

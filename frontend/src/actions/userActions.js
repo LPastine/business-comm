@@ -83,11 +83,11 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 
 export const getUserDetails = (id) => async (dispatch, getState) => {
     try {
-      dispatch({
+        dispatch({
         type: USER_DETAILS_REQUEST,
-      })
+        })
       
-      const { userList: { users } } = getState()
+        const { userLSList: { users } } = getState()
         let userDetails = []
         for (let index = 0; index < users.length; index++) {
             const user = users[index];
@@ -95,11 +95,11 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
                 userDetails.push(user)
             }
         }
-  
-      dispatch({
+
+        dispatch({
         type: USER_DETAILS_SUCCESS,
         payload: userDetails,
-      })
+        })
     } catch (error) {
         dispatch({
             type: USER_DETAILS_FAIL,
