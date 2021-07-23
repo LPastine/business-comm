@@ -26,6 +26,7 @@ const HomeScreen = () => {
     return (
         <>
             <h1>Produtos Cadastrados</h1>
+            <p>Pode testar as funcionalidades CRUD de usuários e produtos e retornar na tela de início para recomeçar do zero.</p>
             {loading || loadingUsers ? <Loader /> : error || errorUsers ? <Message variant='danger'>{error}</Message> :
                 <Row>
                     {products.map(product => (

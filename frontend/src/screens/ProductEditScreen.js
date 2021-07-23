@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
-// import { listProductDetails } from '../actions/productActions'
+import { updateProduct } from '../actions/productActions'
+import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
 
 const ProductEditScreen = ({ match, history }) => {
   const productId = match.params.id
@@ -20,13 +21,28 @@ const ProductEditScreen = ({ match, history }) => {
 
   const dispatch = useDispatch()
 
+  const productUpdate = useSelector((state) => state.productUpdate)
+  const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = productUpdate
+
   useEffect(() => {
+    if (successUpdate) {
+      dispatch({ type: PRODUCT_UPDATE_RESET })
+      history.push('/produtos')
+    } 
       
-  }, [])
+  }, [dispatch, history, successUpdate])
 
   const submitHandler = (e) => {
     e.preventDefault()
-    // UPDATE PRODUCT
+    dispatch(updateProduct({
+      _id: productId,
+      name,
+      price,
+      brand,
+      category,
+      description,
+      countInStock
+    }))
   }
 
   return (
@@ -36,6 +52,8 @@ const ProductEditScreen = ({ match, history }) => {
       </Link>
       <FormContainer>
         <h1>Editar Produto</h1>
+        {loadingUpdate && <Loader />}
+        {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
           <Form onSubmit={submitHandler}>
             <Form.Group controlId='name' className='py-3'>
               <Form.Label>Nome</Form.Label>
@@ -65,6 +83,7 @@ const ProductEditScreen = ({ match, history }) => {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
+              <p>Pode deixar vazio ou colocar o URL de uma imagem</p>
             </Form.Group>
 
             <Form.Group controlId='brand' className='py-3'>
@@ -107,7 +126,7 @@ const ProductEditScreen = ({ match, history }) => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type='submit' variant='primary' className='py-3'>
+            <Button onSubmit={submitHandler} type='submit' variant='primary' className='py-3'>
               Editar
             </Button>
           </Form>
