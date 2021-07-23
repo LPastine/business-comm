@@ -4,9 +4,10 @@ import { Table, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listUsersLS, deleteUser } from '../actions/userActions'
+import { listUsersLS, deleteUser, createUser } from '../actions/userActions'
+import { USER_CREATE_RESET } from '../constants/userConstants'
 
-const UserListScreen = () => {
+const UserListScreen = ({history}) => {
   const dispatch = useDispatch()
 
   const userLSList = useSelector((state) => state.userLSList)
@@ -15,9 +16,23 @@ const UserListScreen = () => {
   const userDelete = useSelector((state) => state.userDelete)
   const { success: successDelete } = userDelete
 
+  const userCreate = useSelector((state) => state.userCreate)
+  const {
+        loading: loadingCreate,
+        error: errorCreate,
+        success: successCreate,
+        user: createdUser
+    } = userCreate
+
   useEffect(() => {
-    dispatch(listUsersLS())
-  }, [dispatch, successDelete])
+    dispatch({ type: USER_CREATE_RESET })
+
+    if (successCreate) {
+      history.push(`editar/usuario/${createdUser._id}`)
+    } else {
+      dispatch(listUsersLS())
+    }
+  }, [dispatch, successDelete, successCreate, history, createdUser])
 
   const deleteHandler = (id) => {
     if (window.confirm('Deseja confirmar?')) {
@@ -25,21 +40,24 @@ const UserListScreen = () => {
   }}
 
   const createUserHandler = () => {
-      console.log('create user');
+    dispatch(createUser())
+    dispatch(listUsersLS())
   }
 
   return (
     <>
       <Row className='align-items-center'>
-            <Col>
-                <h1>Usuários</h1>
-            </Col>
-            <Col className='text-right'>
-                <Button className='my-3' onClick={createUserHandler}>
-                    <i className='fas fa-plus'></i> Criar Novo Usuário
-                </Button>
-            </Col>
-        </Row>
+        <Col>
+            <h1>Usuários</h1>
+        </Col>
+        <Col className='text-right'>
+            <Button className='my-3' onClick={createUserHandler}>
+                <i className='fas fa-plus'></i> Criar Novo Usuário
+            </Button>
+        </Col>
+      </Row>
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (

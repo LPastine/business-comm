@@ -16,6 +16,9 @@ import {
     USER_UPDATE_REQUEST,
     USER_UPDATE_SUCCESS,
     USER_UPDATE_FAIL,
+    USER_CREATE_REQUEST,
+    USER_CREATE_SUCCESS,
+    USER_CREATE_FAIL,
 } from '../constants/userConstants'
 
 export const listUsers = () => async (dispatch) => {
@@ -76,9 +79,55 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         dispatch({
             type: USER_DELETE_SUCCESS,
         })
+
+        dispatch({
+            type: USER_LS_LIST_SUCCESS,
+            payload: newUserList
+        })
     } catch (error) {
         dispatch({
             type: USER_DELETE_FAIL,
+            payload: error.message,
+        })
+    }
+}
+
+export const createUser = () => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_CREATE_REQUEST,
+        })
+
+        const { userLSList: { users } } = getState()
+
+        const newUserId = parseInt(users[users.length - 1]._id) + 1
+
+        const newUser = {
+            _id: JSON.stringify(newUserId),
+            name: '',
+            email: '',
+            password: '',
+            isAdmin: false,
+        }
+        
+        let updatedList = users
+        updatedList.push(newUser)
+
+        localStorage.setItem('localUsers', JSON.stringify(updatedList))
+
+        dispatch({
+            type: USER_CREATE_SUCCESS,
+            payload: newUser
+        })
+
+        dispatch({
+            type: USER_LS_LIST_SUCCESS,
+            payload: updatedList
+        })
+
+    } catch (error) {
+        dispatch({
+            type: USER_CREATE_FAIL,
             payload: error.message,
         })
     }

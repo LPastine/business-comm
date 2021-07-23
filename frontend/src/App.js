@@ -18,8 +18,8 @@ const App = () => {
           <Route path='/' component={HomeScreen} exact />
           <Route path='/produtos' component={ProductListScreen} />
           <Route path='/usuarios' component={UserListScreen} />
-          <Route path='/editar/usuario/:id/' component={UserEditScreen} />
-          <Route path='/editar/produto/:id/' component={ProductEditScreen} />
+          <Route path='/editar/usuario/:id/' component={UserEditScreen} exact />
+          <Route path='/editar/produto/:id/' component={ProductEditScreen} exact />
         </Container>
       </main>
       <Footer />
